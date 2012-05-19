@@ -95,7 +95,10 @@ body {    background: #aaaaaa url(images/bg.jpg) repeat scroll 0 0 }
     padding-right: 42px;
     text-align: right;
 }
-
+a {
+    color: #FFF;
+    text-decoration: none;
+}
 #contact_details a {
     color: #333333;
     font-size: 13px;
@@ -130,16 +133,6 @@ body {    background: #aaaaaa url(images/bg.jpg) repeat scroll 0 0 }
     height: 120px;
 }
 
-#sliderwrap {
-    float: left;
-    text-align: center;
-    width: 600px;
-    overflow: hidden;
-    position: relative;
-    height: 110px;
-    margin-left: 100px;
-}
-
 #slidertext h3 {
     font-size: 14px;
     font-style: normal;
@@ -150,11 +143,14 @@ body {    background: #aaaaaa url(images/bg.jpg) repeat scroll 0 0 }
 }
 
 #slidertext p {
-    font-size: 12px;
+    font-size: 14px;
     font-style: normal;
     font-weight: normal;
     color: #CCCCCC;
-    padding: 0 25px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 10px;
+    padding-left: 20px;
 }
 
 a.prev {
@@ -172,20 +168,13 @@ a.next {
 #slidertext {
     margin-top: 15px;
     float: left;
-    width: 600px;
-    overflow: hidden;
     position: relative;
+    text-align: center;
 }
 
-#slidertext li {
-    overflow: hidden;
-    position: relative;
-    width: 600px;
-    height: 100px;
-}
 .copyright {
     text-align: center;
     margin-top: 10px;
-    font-size: 12px;
+    font-size: 8px;
     margin-bottom: 50px;
 }

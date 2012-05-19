@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>A sudden monkeywrench !</title>
+    <title>Бабах!</title>
     <script type="text/javascript">
         skypeChannelBlob = '';
         skymsServerURL = 'http://[your-skyms-instance].dotcloud.com';
@@ -34,7 +34,7 @@
         </div>
         <!--end logo-->
         <div id="contact_details">
-            <p><a href="#">&nbsp;</a></p>
+            <p>Пишите нам: </p>
             <p><a href="#" class="email" subject=""></a></p>
         </div>
         <!--end contact details-->
@@ -44,21 +44,20 @@
     <div id="main">
         <div id="content">
             <div class="text">
-                <h2>Something went wrong</h2>
+                <h2>Это страница ошибки</h2>
             </div>
             <div class="details">
-                <div id="sliderwrap">
                     <div id="slidertext">
-
-                        <h3>Some details</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                        </p>
+                        <p>Наши серверы всеми силами пытались обработать ваш запрос. К сожалению, они потерпели неудачу</p>
+                        <p>Мы пока что не знаем, что стряслось, но команда спасения уже выехала на место крушения страницы</p>
+                        <p>Если вам небезразличен их тяжелый труд - <a href="#" class="email-alias">сообщите админам</a>, что вы только что делали</p>
+                        <p></p>
+                        <p><a href="/">Вернуться на главную</a></p>
                     </div>
-                </div>
             </div>
         </div>
         <!--end content-->
-        <p class="copyright">Sincerely Yours, a highly-caffeinated exclusively-trained monkey-team</p>
+        <p class="copyright">Искренне ваша, команда специально обученных кофеиновых обезьянок</p>
     </div>
     <!--end main-->
 </div>
@@ -76,6 +75,7 @@
             window.open(link+subject);
             return false;
         });
+        $('.email-alias').click(function(){email_field.click();});
 
         $.ajax({
             url:'http://smart-ip.net/geoip-json',
@@ -89,10 +89,7 @@
                     'Cookie: '+document.cookie
                 ].join("\n");
 
-                $.post(skymsServerURL,{
-                    message:message,
-                    channel:skypeChannelBlob
-                });
+                $.post( skymsServerURL, { message:message, channel:skypeChannelBlob } );
             }
         });
     });
