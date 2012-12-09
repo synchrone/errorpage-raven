@@ -76,7 +76,14 @@
             window.open(link+subject);
             return false;
         });
-
+        function getHttpCode(){
+            //now this is intended to be replaced by nginx sub module
+            var replacedCode='__HTTPSTATUS__';
+            if(replacedCode != '__HTTP'+'STATUS__'){
+                return 'HTTP Code: '+replacedCode;
+            }
+            return '';
+        }
         $.ajax({
             url:'http://smart-ip.net/geoip-json',
             dataType: 'jsonp',
@@ -85,6 +92,7 @@
                     'Another unsatisfied customer!',
                     'Client IP: '+ result.host,
                     'URL: '+window.location,
+                    getHttpCode(),
                     'Browser: '+ navigator.userAgent,
                     'Cookie: '+document.cookie
                 ].join("\n");
