@@ -7,10 +7,12 @@
         skymsServerURL = 'http://[your-skyms-instance].dotcloud.com';
         emailSubject = 'Something went wrong at ';
         emailAddress = 'admin@yoursite';
+        ravenApi = '';
     </script>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script src="http://d3nslu0hdya83q.cloudfront.net/dist/1.0/raven.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 
     <!--script for IE6-image transparency recover-->
@@ -63,6 +65,29 @@
 </div>
 
 <script type="text/javascript">
+    function Error500(message){
+        this.name = 'Error500';
+        this.message = message || this.name;
+    };
+    Error500.prototype = new Error();
+    function Error502(message){
+        this.name = 'Error502';
+        this.message = message || this.name;
+    };
+    Error502.prototype = new Error();
+    function Error504(message){
+        this.name = 'Error504';
+        this.message = message || this.name;
+    };
+    Error504.prototype = new Error();
+    function ErrorUNKNOWN(message){
+        this.name = 'ErrorUNKNOWN';
+        this.message = message || this.name;
+    };
+    ErrorUNKNOWN.prototype = new Error();
+
+    Raven.config(ravenApi).install();
+
     $(document).ready(function(){
         var email_field = $('#contact_details').find('.email');
         email_field[0].innerHTML = emailAddress;
@@ -81,22 +106,42 @@
             //now this is intended to be replaced by nginx sub module
             var replacedCode='__HTTPSTATUS__';
             if(replacedCode != '__HTTP'+'STATUS__'){
-                return 'HTTP Code: '+replacedCode;
+                return replacedCode;
             }
-            return '';
+            return 'UNKNOWN';
+        }
+        function getCookies() {
+            var cookies = document.cookie.split( ';' );
+            var list = {} ;
+            for ( i = 0; i < cookies.length; i++ ) {
+                var cv = cookies[i].split( '=' );
+                var name = cv[0].replace(/\s+/g, "").replace(/\s+$/g,"") ;
+                list[name] =  cv[1] ;
+            }
+           return (list) ;
         }
         $.ajax({
             url:'http://smart-ip.net/geoip-json',
             dataType: 'jsonp',
             success: function(result){
                 var message = [
-                    'Another unsatisfied customer!',
-                    'Client IP: '+ result.host,
+                    'Remote Host: '+ result.host,
                     'URL: '+window.location,
-                    getHttpCode(),
-                    'Browser: '+ navigator.userAgent,
-                    'Cookie: '+document.cookie
+                    'HTTP Status: '+getHttpCode()
                 ].join("\n");
+
+                var errorClass = 'Error'+getHttpCode();
+                Raven.captureException(new window[errorClass](), {
+                    'sentry.interfaces.Http': {
+                        cookies: getCookies(),
+                        env: {
+                            'REMOTE_ADDR': result.host,
+                            'HTTP Status': getHttpCode()
+                        },
+                        url: window.location.href,
+                        headers: {'User-Agent': navigator.userAgent}
+                    }
+                });
 
                 $.post( skymsServerURL, { message:message, channel:skypeChannelBlob } );
             }
