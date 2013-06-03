@@ -84,24 +84,29 @@
             }
             return '';
         }
+        var post_to_skyms = function(result){
+            var message = [
+                'Another unsatisfied customer!',
+                'Client IP: '+ result.host,
+                'URL: '+window.location,
+                getHttpCode(),
+                'Browser: '+ navigator.userAgent,
+                'Cookie: '+document.cookie
+            ].join("\n");
+
+            $.post(skymsServerURL,{
+                message:message,
+                channel:skypeChannelBlob
+            });
+        };
+            
         $.ajax({
             url:'http://smart-ip.net/geoip-json',
             dataType: 'jsonp',
-            success: function(result){
-                var message = [
-                    'Another unsatisfied customer!',
-                    'Client IP: '+ result.host,
-                    'URL: '+window.location,
-                    getHttpCode(),
-                    'Browser: '+ navigator.userAgent,
-                    'Cookie: '+document.cookie
-                ].join("\n");
-
-                $.post(skymsServerURL,{
-                    message:message,
-                    channel:skypeChannelBlob
-                });
-            }
+            success: post_to_skyms,
+            error: function(){
+                post_to_skyms({host: 'unknown'});
+            } 
         });
     });
 </script>
