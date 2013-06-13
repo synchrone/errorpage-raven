@@ -1,154 +1,50 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Бабах!</title>
-    <script type="text/javascript">
-        errorpageRoot = 'http://errorpage';
-        ravenApi = '';
-        emailSubject = 'Something went wrong at ';
-        emailAddress = 'admin@yoursite';
-    </script>
-
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script>
-        document.write('<link rel="stylesheet" type="text/css" href="'+errorpageRoot+'/style.css"/>');
-    </script>
-
-    <script src="http://d3nslu0hdya83q.cloudfront.net/dist/1.0/raven.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-
-    <!--script for IE6-image transparency recover-->
-    <!--[if IE 6]>
-    <script type="text/javascript" src="js/DD_belatedPNG_0.0.7a-min.js"></script>
-    <script>
-        /* EXAMPLE */
-        DD_belatedPNG.fix('#logo img,#main');
-    </script>
-    <![endif]-->
-</head>
-
-<body>
-
-
-<div class="container">
-    <div id="header">
-        <div id="logo">
-            <!-- <a href="index.html"><img src="images/logo.png" alt="logo"/></a>
-            -->
-        </div>
-        <!--end logo-->
-        <div id="contact_details">
-            <p>Пишите нам: </p>
-            <p><a href="#" class="email" subject=""></a></p>
-        </div>
-        <!--end contact details-->
-    </div>
-    <div style="clear:both"></div>
-
-    <div id="main">
-        <div id="content">
-            <div class="text">
-                <h2>Это страница ошибки</h2>
+    <head>
+        <title>Бабах!</title>
+        <script type="text/javascript">
+            errorpageRoot = 'http://errorpage';
+            ravenApi = '';
+            emailSubject = 'Something went wrong at ';
+            emailAddress = 'admin@yoursite';
+        </script>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <script>document.write('<link rel="stylesheet" type="text/css" href="'+errorpageRoot+'/assets/style.css"/>');</script>
+    </head>
+    <body>
+        <div class="container">
+            <div id="header">
+                <div id="logo">
+                    <!-- <a href="index.html"><img src="images/logo.png" alt="logo"/></a>-->
+                </div>
+                <div id="contact_details">
+                    <p>Пишите нам: </p>
+                    <p><a href="#" class="email" subject=""></a></p>
+                </div>
             </div>
-            <div class="details">
-                    <div id="slidertext">
-                        <p>Наши серверы всеми силами пытались обработать ваш запрос. К сожалению, они потерпели неудачу</p>
-                        <p>Мы пока что не знаем, что стряслось, но команда спасения уже выехала на место крушения страницы</p>
-                        <p>Если вам небезразличен их тяжелый труд - <a href="#" class="email-alias">сообщите админам</a>, что вы только что делали</p>
-                        <p></p>
-                        <p><a href="/">Вернуться на главную</a></p>
+            <div style="clear:both"></div>
+            <div id="main">
+                <div id="content">
+                    <div class="text">
+                        <h2>Это страница ошибки</h2>
                     </div>
+                    <div class="details">
+                        <div id="slidertext">
+                            <p>Наши серверы всеми силами пытались обработать ваш запрос. К сожалению, они потерпели неудачу</p>
+                            <p>Мы пока что не знаем, что стряслось, но команда спасения уже выехала на место крушения страницы</p>
+                            <p>Если вам небезразличен их тяжелый труд - <a href="#" class="email-alias">сообщите админам</a>, что вы только что делали</p>
+                            <p></p>
+                            <p><a href="/">Вернуться на главную</a></p>
+                        </div>
+                    </div>
+                </div>
+                <p class="copyright">Искренне ваша, команда специально обученных кофеиновых обезьянок</p>
             </div>
         </div>
-        <!--end content-->
-        <p class="copyright">Искренне ваша, команда специально обученных кофеиновых обезьянок</p>
-    </div>
-    <!--end main-->
-</div>
-
-<script type="text/javascript">
-    function Error500(message){
-        this.name = 'Error500';
-        this.message = message || this.name;
-    };
-    Error500.prototype = new Error();
-    function Error502(message){
-        this.name = 'Error502';
-        this.message = message || this.name;
-    };
-    Error502.prototype = new Error();
-    function Error504(message){
-        this.name = 'Error504';
-        this.message = message || this.name;
-    };
-    Error504.prototype = new Error();
-    function ErrorUNKNOWN(message){
-        this.name = 'ErrorUNKNOWN';
-        this.message = message || this.name;
-    };
-    ErrorUNKNOWN.prototype = new Error();
-
-    Raven.config(ravenApi).install();
-
-    $(document).ready(function(){
-        var email_field = $('#contact_details').find('.email');
-        email_field[0].innerHTML = emailAddress;
-        email_field
-            .attr('subject',emailSubject+window.location)
-            .click(function(){
-            var link = 'mailto:'+this.innerHTML;
-            var subject = $(this).attr('subject');
-            subject = subject ==undefined ? '' : '?subject='+subject;
-            window.open(link+subject);
-            return false;
-        });
-        $('.email-alias').click(function(){email_field.click();});
-
-        function getHttpCode(){
-            //now this is intended to be replaced by nginx sub module
-            var replacedCode='__HTTPSTATUS__';
-            if(replacedCode != '__HTTP'+'STATUS__'){
-                return replacedCode;
-            }
-            return 'UNKNOWN';
-        }
-        function getCookies() {
-            var cookies = document.cookie.split( ';' );
-            var list = {} ;
-            for ( i = 0; i < cookies.length; i++ ) {
-                var cv = cookies[i].split( '=' );
-                var name = cv[0].replace(/\s+/g, "").replace(/\s+$/g,"") ;
-                list[name] =  cv[1] ;
-            }
-           return (list) ;
-        }
-
-        $.ajax({
-            url:errorpageRoot+'/geoip-json',
-            dataType: 'jsonp',
-            success: function(result)
-            {
-                var ex = new window['Error'+getHttpCode()]();
-
-                var http = {
-                    cookies: getCookies(),
-                    env: {
-                        'REMOTE_ADDR': result.host,
-                        'HTTP Status': getHttpCode()
-                    },
-                    url: window.location.href,
-                    headers: {'User-Agent': navigator.userAgent}
-                };
-                if (window.document.referrer) {
-                    http.headers.Referer = window.document.referrer;
-                }
-
-                Raven.captureException(ex, {
-                    'sentry.interfaces.Http': http
-                });
-            }
-        });
-    });
-</script>
-</body>
+        <script src="http://d3nslu0hdya83q.cloudfront.net/dist/1.0/raven.js"></script>
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script>
+            document.write('<script type="text/javascript" src="'+errorpageRoot+'/assets/main.js"></scrip'+'t>');
+        </script>
+    </body>
 </html>
