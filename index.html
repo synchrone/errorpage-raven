@@ -3,8 +3,8 @@
 <head>
     <title>Бабах!</title>
     <script type="text/javascript">
-        errorpageRoot = 'http://errorpage.syn.int.ru';
-        ravenApi = 'https://7bc1b228c7d54734bfa0e24a6317072a:5b40ecce83654537af0bc06b7c9c2043@app.getsentry.com/6783';
+        errorpageRoot = 'http://errorpage';
+        ravenApi = '';
         emailSubject = 'Something went wrong at ';
         emailAddress = 'admin@yoursite';
     </script>
@@ -126,24 +126,25 @@
         $.ajax({
             url:errorpageRoot+'/geoip-json',
             dataType: 'jsonp',
-            success: function(result){
-                var message = [
-                    'Remote Host: '+ result.host,
-                    'URL: '+window.location,
-                    'HTTP Status: '+getHttpCode()
-                ].join("\n");
+            success: function(result)
+            {
+                var ex = new window['Error'+getHttpCode()]();
 
-                var errorClass = 'Error'+getHttpCode();
-                Raven.captureException(new window[errorClass](), {
-                    'sentry.interfaces.Http': {
-                        cookies: getCookies(),
-                        env: {
-                            'REMOTE_ADDR': result.host,
-                            'HTTP Status': getHttpCode()
-                        },
-                        url: window.location.href,
-                        headers: {'User-Agent': navigator.userAgent}
-                    }
+                var http = {
+                    cookies: getCookies(),
+                    env: {
+                        'REMOTE_ADDR': result.host,
+                        'HTTP Status': getHttpCode()
+                    },
+                    url: window.location.href,
+                    headers: {'User-Agent': navigator.userAgent}
+                };
+                if (window.document.referrer) {
+                    http.headers.Referer = window.document.referrer;
+                }
+
+                Raven.captureException(ex, {
+                    'sentry.interfaces.Http': http
                 });
             }
         });
