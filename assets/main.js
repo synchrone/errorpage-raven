@@ -37,8 +37,8 @@ $(document).ready(function(){
 
     function getNginxData(){
         //now this is intended to be replaced by nginx sub module
-        var nginxData = __NGINXDATA__;
         if(nginxData != '__NGINX'+'DATA__'){
+            nginxData.code = parseInt(nginxData.code);
             return nginxData;
         }
         return {"code": 'UNKNOWN', "city":"unknown"};
@@ -61,7 +61,7 @@ $(document).ready(function(){
         dataType: 'jsonp',
         success: function(result)
         {
-            var ex = new window['Error'+getHttpCode()]();
+            var ex = new window['Error'+getNginxData().code]();
 
             var http = {
                 cookies: getCookies(),
