@@ -35,13 +35,13 @@ $(document).ready(function(){
     });
     $('.email-alias').click(function(){email_field.click();});
 
-    function getHttpCode(){
+    function getNginxData(){
         //now this is intended to be replaced by nginx sub module
-        var replacedCode='__HTTPSTATUS__';
-        if(replacedCode != '__HTTP'+'STATUS__'){
-            return replacedCode;
+        var nginxData = __NGINXDATA__;
+        if(nginxData != '__NGINX'+'DATA__'){
+            return nginxData;
         }
-        return 'UNKNOWN';
+        return {"code": 'UNKNOWN', "city":"unknown"};
     }
     function getCookies() {
         var cookies = document.cookie.split( ';' );
@@ -67,7 +67,8 @@ $(document).ready(function(){
                 cookies: getCookies(),
                 env: {
                     'REMOTE_ADDR': result.host,
-                    'HTTP Status': getHttpCode()
+                    'HTTP Status': getNginxData().code,
+                    'CITY': getNginxData().city
                 },
                 url: window.location.href,
                 headers: {'User-Agent': navigator.userAgent}
